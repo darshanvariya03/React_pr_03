@@ -1,11 +1,10 @@
-import Record from "./Record";
-import CompanyData from "./ComRecord";
+import Record from "./Home";
+
 
 function App() {
   return (
     <div>
-      <Record />
-      <CompanyData />
+      <Record/>
     </div>
   );
 }
