@@ -1,91 +1,79 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import './home.css'
 
-function Record() {
-    const [data, setData] = useState([]);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [salary, setSalary] = useState('');
+const Record = () => {
+
+    const [input, setInput] = useState([
+        { id: '', name: '', phone: '', salary: '' }
+    ])
 
     const addData = () => {
-        if (name && email && salary) {
-            setData([...data, { name, email, salary }]);
-            setName('');
-            setEmail('');
-            setSalary('');
-        }
-    };
+        let newRow = { id: Math.floor(Math.random() * 100), name: '', phone: '', salary: '' };
+        let add = [...input, newRow];
+        setInput(add)
+    }
 
-    const deleteData = (index) => {
-        const olddata = [...data];
-        olddata.splice(index, 1);
-        setData(olddata);   
-    };
+    const inputhandle = (e, i) => {
+        let data = [...input];
+        data[i][e.target.name] = e.target.value;
+        setInput(data)
+    }
+
+    const remove = (id) => {
+        let allData = [...input];
+        let del = allData.filter((val) => {
+            return val.id != id;
+        })
+        setInput(del)
+    }
 
     return (
-        <center>
-            <div className="container">
-                <h1>Add Data</h1>
-                <div className="text-light form-data">
-                    <table>
-                        <div className="form-group">
-                            <label>Name:</label>
-                            <input
-                                className='ml-3'
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Email : </label>
-                            <input
-                                className='ml-3'
-                                type="text"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Salary:</label>
-                            <input
-                                className='ml-3'
-                                type="text"
-                                value={salary}
-                                onChange={(e) => setSalary(e.target.value)}
-                            />
-                        </div>
-                        <button className="btn btn-primary" onClick={ () => addData() }>Add Data</button>
-                    </table>
-                </div>
-                <div>
-                    <table className="table-data w-10 container">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Salary</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((item, i) => (
-                                <tr key={i}>
-                                    <td>{item.name}</td>
-                                    <td>{item.email}</td>
-                                    <td>{item.salary}</td>
-                                    <td>
-                                        <button className="btn btn-danger" onClick={() => deleteData(i)}>Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+        <div className="container main">
+            <div>
+                <h1>Dynamic Form</h1>
+                <table className="table-data w-10 container" border="2">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Salary</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            input.map((item, i) => {
+                                return (
+                                    <tr key={i}>
+                                        <td>
+                                            {
+                                                i == 0 ? <input type="hidden" value={item.id} /> : <input type="text" value={item.id} />
+                                            }
+                                        </td>
+                                        <td><input type="text" name="name" value={item.name} onChange={(e) => inputhandle(e, i)} /></td>
+                                        <td><input type="text" name="phone" value={item.phone} onChange={(e) => inputhandle(e, i)} /></td>
+                                        <td><input type="text" name="salary" value={item.salary} onChange={(e) => inputhandle(e, i)} /></td>
+                                        <td>
+                                        {
+                                            i == 0 ? "" : <button type="button" className="btn btn-danger m-2 p-1" onClick={() => remove(item.id)}>
+                                                {
+                                                    i == 0 ? "" : "delete"
+                                                }
+                                            </button>
+                                        }
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
 
+                <button className="btn btn-primary m-2 p-2" onClick={() => addData()}>Add</button>
             </div>
-        </center>
-    );
+        </div>
+    )
 }
 
 export default Record;
